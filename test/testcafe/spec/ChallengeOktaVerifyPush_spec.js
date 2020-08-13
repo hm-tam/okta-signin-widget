@@ -25,11 +25,11 @@ const pushRejectMock = RequestMock()
   .onRequestTo('http://localhost:3000/idp/idx/challenge/poll')
   .respond(pushReject, 403);
 
-  const pushWaitMock = RequestMock()
-    .onRequestTo('http://localhost:3000/idp/idx/introspect')
-    .respond(pushPoll)
-    .onRequestTo('http://localhost:3000/idp/idx/challenge/poll')
-    .respond(pushPoll);
+const pushWaitMock = RequestMock()
+  .onRequestTo('http://localhost:3000/idp/idx/introspect')
+  .respond(pushPoll)
+  .onRequestTo('http://localhost:3000/idp/idx/challenge/poll')
+  .respond(pushPoll);
 
 fixture('Challenge Okta Verify Push');
 
@@ -93,7 +93,7 @@ test
     await t.expect(answerRequestUrl).eql('http://localhost:3000/idp/idx/challenge/poll');
   });
 
-  test
+test
   .requestHooks(pushWaitMock)('Warning callout appears after 30 seconds', async t => {
     const challengeOktaVerifyPushPageObject = await setup(t);
     await t.wait(30500);
