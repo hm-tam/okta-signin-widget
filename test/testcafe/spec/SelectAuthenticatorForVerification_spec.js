@@ -240,8 +240,14 @@ test.requestHooks(requestLogger, mockChallengeOVTotp)('should navigate to okta v
   const req2 = requestLogger.requests[1].request;
   await t.expect(req2.url).eql('http://localhost:3000/idp/idx/challenge');
   await t.expect(req2.method).eql('post');
-  await t.expect(req2.body)
-    .eql('{"authenticator":{"id":"auteq0lLiL9o1cYoN0g4","methodType":"totp"},"stateHandle":"02im-3M2f6UXHgNfS7Ns7C85EKHzGaKw0u1CC4p9_r"}');
+  await t.expect(JSON.parse(req2.body)).eql({
+    'authenticator':
+    {
+      'id': 'auteq0lLiL9o1cYoN0g4',
+      'methodType': 'totp'
+    },
+    'stateHandle': '02im-3M2f6UXHgNfS7Ns7C85EKHzGaKw0u1CC4p9_r'
+  });
 });
 
 test.requestHooks(requestLogger, mockChallengeOVPush)('should navigate to okta verify push page', async t => {
@@ -259,8 +265,14 @@ test.requestHooks(requestLogger, mockChallengeOVPush)('should navigate to okta v
   const req2 = requestLogger.requests[1].request;
   await t.expect(req2.url).eql('http://localhost:3000/idp/idx/challenge');
   await t.expect(req2.method).eql('post');
-  await t.expect(req2.body)
-    .eql('{"authenticator":{"id":"auteq0lLiL9o1cYoN0g4","methodType":"push"},"stateHandle":"02im-3M2f6UXHgNfS7Ns7C85EKHzGaKw0u1CC4p9_r"}');
+  await t.expect(JSON.parse(req2.body)).eql({
+    'authenticator':
+    {
+      'id': 'auteq0lLiL9o1cYoN0g4',
+      'methodType': 'push'
+    },
+    'stateHandle': '02im-3M2f6UXHgNfS7Ns7C85EKHzGaKw0u1CC4p9_r'
+  });
 });
 
 test.requestHooks(requestLogger, mockChallengeOVFastPass)('should navigate to okta verify fast pass page', async t => {
@@ -278,6 +290,12 @@ test.requestHooks(requestLogger, mockChallengeOVFastPass)('should navigate to ok
   const req2 = requestLogger.requests[1].request;
   await t.expect(req2.url).eql('http://localhost:3000/idp/idx/challenge');
   await t.expect(req2.method).eql('post');
-  await t.expect(req2.body)
-    .eql('{"authenticator":{"id":"auteq0lLiL9o1cYoN0g4","methodType":"signed_nonce"},"stateHandle":"02im-3M2f6UXHgNfS7Ns7C85EKHzGaKw0u1CC4p9_r"}');
+  await t.expect(JSON.parse(req2.body)).eql({
+    'authenticator':
+    {
+      'id': 'auteq0lLiL9o1cYoN0g4',
+      'methodType': 'signed_nonce'
+    },
+    'stateHandle': '02im-3M2f6UXHgNfS7Ns7C85EKHzGaKw0u1CC4p9_r'
+  });
 });
