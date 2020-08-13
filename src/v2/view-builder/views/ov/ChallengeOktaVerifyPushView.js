@@ -1,13 +1,12 @@
-import { _, loc, createButton, View } from 'okta';
+import { _, $, loc, createButton, View } from 'okta';
 import hbs from 'handlebars-inline-precompile';
 import BaseView from '../../internals/BaseView';
 import BaseForm from '../../internals/BaseForm';
 import BaseAuthenticatorView from '../../components/BaseAuthenticatorView';
 import AuthenticatorVerifyFooter from '../../components/AuthenticatorVerifyFooter';
 import polling from '../shared/polling';
-import Util from '../../../../util/Util';
+import { WARNING_TIMEOUT } from '../../utils/Constants';
 
-const WARNING_TIMEOUT = 30000;
 const warningTemplate = View.extend({
   className: 'okta-form-infobox-warning infobox infobox-warning',
   template: hbs`
@@ -15,7 +14,6 @@ const warningTemplate = View.extend({
     <p>{{warning}}</p>
   `
 });
-let warningTimeout;
 
 const Body = BaseForm.extend(Object.assign(
   {
@@ -31,15 +29,18 @@ const Body = BaseForm.extend(Object.assign(
       BaseForm.prototype.initialize.apply(this, arguments);
       this.listenTo(this.model, 'error', this.stopPush);
       this.listenTo(this.model, 'change:isPushSent', this.setButtonState.bind(this));
-      this.listenTo(this.options.appState, 'switchForm', this.stopPolling.bind(this));
       this.addView();
     },
 
     addView () {
       this.add(createButton({
         className: 'button button-wide button-primary send-push',
-        click: () => {
-          this.startPush();
+        click: (e) => {
+          if ($(e.target).hasClass('link-button-disabled')) {
+            e.preventDefault();
+          } else {
+            this.startPush();
+          }
         }
       }));
     },
@@ -52,7 +53,7 @@ const Body = BaseForm.extend(Object.assign(
       this.clearErrors();
       this.model.set('isPushSent', true);
       this.startPolling();
-      warningTimeout = Util.callAfterTimeout(_.bind(function () {
+      this.warningTimeout = setTimeout(_.bind(function () {
         this.showWarning(loc('oktaverify.warning', 'login'));
       }, this), WARNING_TIMEOUT);
     },
@@ -68,11 +69,9 @@ const Body = BaseForm.extend(Object.assign(
       if (this.model.get('isPushSent')) {
         button.addClass('link-button-disabled');
         button.html(loc('oie.okta_verify.push.sent', 'login'));
-        button.prop('disabled', true);
       } else {
         button.removeClass('link-button-disabled');
         button.html(loc('oie.okta_verify.push.send', 'login'));
-        button.prop('disabled', false);
       }
     },
 
@@ -85,7 +84,12 @@ const Body = BaseForm.extend(Object.assign(
       if (this.$('.o-form-error-container div').hasClass('okta-form-infobox-warning')) {
         this.$('.okta-form-infobox-warning').remove();
       }
-      clearTimeout(warningTimeout);
+      clearTimeout(this.warningTimeout);
+    },
+
+    remove () {
+      BaseForm.prototype.remove.apply(this, arguments);
+      this.stopPolling();
     },
   },
 

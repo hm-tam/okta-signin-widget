@@ -31,7 +31,7 @@ const pushRejectMock = RequestMock()
     .onRequestTo('http://localhost:3000/idp/idx/challenge/poll')
     .respond(pushPoll);
 
-fixture('Challenge Okta Verify Push Form');
+fixture('Challenge Okta Verify Push');
 
 async function setup(t) {
   const challengeOktaVerifyPushPageObject = new ChallengeOktaVerifyPushPageObject(t);
@@ -54,8 +54,9 @@ test
     });
 
     const pageTitle = challengeOktaVerifyPushPageObject.getPageTitle();
-    const pushBtnText = challengeOktaVerifyPushPageObject.getPushButtonLabel();
-    await t.expect(pushBtnText).contains('Push notification sent');
+    const pushBtn = challengeOktaVerifyPushPageObject.getPushButton();
+    await t.expect(pushBtn.textContent).contains('Push notification sent');
+    await t.expect(pushBtn.hasClass('link-button-disabled')).ok();
     await t.expect(pageTitle).contains('Get a push notification');
   });
 
@@ -64,8 +65,9 @@ test
     const challengeOktaVerifyPushPageObject = await setup(t);
     await challengeOktaVerifyPushPageObject.waitForErrorBox();
     await t.expect(challengeOktaVerifyPushPageObject.getError()).contains('You have chosen to reject this login.');
-    const pushBtnText = challengeOktaVerifyPushPageObject.getPushButtonLabel();
-    await t.expect(pushBtnText).contains('Send push notification');
+    const pushBtn = challengeOktaVerifyPushPageObject.getPushButton();
+    await t.expect(pushBtn.textContent).contains('Send push notification');
+    await t.expect(pushBtn.hasClass('link-button-disabled')).notOk();
   });
 
 test

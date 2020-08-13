@@ -7,8 +7,8 @@ export default class ChallengeOktaVerifyPushPageObject extends ChallengeFactorPa
     super(t);
   }
 
-  getPushButtonLabel () {
-    return this.form.getElement('.send-push').textContent;
+  getPushButton () {
+    return this.form.getElement('.send-push');
   }
 
   getError () {

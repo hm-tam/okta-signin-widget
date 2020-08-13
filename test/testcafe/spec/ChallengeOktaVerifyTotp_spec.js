@@ -35,7 +35,7 @@ async function setup(t) {
 }
 
 test
-  .requestHooks(validTOTPmock)('challenge ov totp screen has right labels', async t => {
+  .requestHooks(logger, validTOTPmock)('challenge okta verify with valid TOTP', async t => {
     const challengeOktaVerifyTOTPPageObject = await setup(t);
 
     const { log } = await t.getBrowserConsoleMessages();
@@ -54,20 +54,7 @@ test
     await t.expect(pageTitle).contains('Enter a code');
     await t.expect(await challengeOktaVerifyTOTPPageObject.getTotpLabel())
       .contains('Enter code from Okta Verify app');
-  });
 
-test
-  .requestHooks(invalidTOTPMock)('challenge okta verify with invalid TOTP', async t => {
-    const challengeOktaVerifyTOTPPageObject = await setup(t);
-    await challengeOktaVerifyTOTPPageObject.verifyFactor('credentials.totp', '123');
-    await challengeOktaVerifyTOTPPageObject.clickNextButton();
-    await challengeOktaVerifyTOTPPageObject.waitForErrorBox();
-    await t.expect(challengeOktaVerifyTOTPPageObject.getInvalidOTPError()).contains('Authentication failed');
-  });
-
-test
-  .requestHooks(logger, validTOTPmock)('challenge okta verify with valid OTP', async t => {
-    const challengeOktaVerifyTOTPPageObject = await setup(t);
     await challengeOktaVerifyTOTPPageObject.verifyFactor('credentials.totp', '1234');
     await challengeOktaVerifyTOTPPageObject.clickNextButton();
     const successPage = new SuccessPageObject(t);
@@ -91,4 +78,13 @@ test
     });
     await t.expect(answerRequestMethod).eql('post');
     await t.expect(answerRequestUrl).eql('http://localhost:3000/idp/idx/challenge/answer');
+  });
+
+test
+  .requestHooks(invalidTOTPMock)('challenge okta verify with invalid TOTP', async t => {
+    const challengeOktaVerifyTOTPPageObject = await setup(t);
+    await challengeOktaVerifyTOTPPageObject.verifyFactor('credentials.totp', '123');
+    await challengeOktaVerifyTOTPPageObject.clickNextButton();
+    await challengeOktaVerifyTOTPPageObject.waitForErrorBox();
+    await t.expect(challengeOktaVerifyTOTPPageObject.getInvalidOTPError()).contains('Authentication failed');
   });

@@ -8,8 +8,8 @@ export default BaseAuthenticatorView.extend({
     BaseAuthenticatorView.prototype.initialize.apply(this, arguments);
 
     const currentAuthenticator = this.options?.appState?.get('currentAuthenticator');
-    const selectedChannel = currentAuthenticator?.contextualData?.selectedChannel;
-    if (selectedChannel === 'totp') {
+    const selectedMethod = currentAuthenticator?.contextualData?.selectedMethod;
+    if (selectedMethod === 'totp') {
       this.Body = ChallengeOktaVerifyTotpView;
       this.Footer = AuthenticatorVerifyFooter;
     } else {

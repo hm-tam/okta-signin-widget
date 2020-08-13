@@ -23,20 +23,25 @@ const createOVOptions = (options = []) => {
   const methodTypeObj = ovItem?.value?.form?.value?.find(v => v.name === 'methodType');
   const methodOptions = methodTypeObj?.options;
   if (methodOptions) {
-    const ovOptions = [];
-    methodOptions.map((method) => {
+    const ovOptions = methodOptions.map((method) => {
+      // get value object from the ov item
       const value = [...ovItem.value.form.value];
+      // get index of the methodType object within the value object
       const methodTypeIndex = ovItem.value.form.value.findIndex((v) => v.name === 'methodType');
+      // create a new methodType object that removes the options array and
+      // has a value of the current method
       const newMethodTypeObj = Object.assign(_.omit(methodTypeObj, 'options'), method);
+      // replace old methodType object with the new one
       value.splice(methodTypeIndex, 1, newMethodTypeObj);
-      ovOptions.push(Object.assign({}, ovItem, {
+      // return a new ov item for a specific method
+      return Object.assign({}, ovItem, {
         label: method.label,
         value: {
           form: {
             value,
           }
         }
-      }));
+      });
     });
     const ovIndex = options.findIndex((option) => option.relatesTo.type === 'app');
     options.splice(ovIndex, 1, ...ovOptions);

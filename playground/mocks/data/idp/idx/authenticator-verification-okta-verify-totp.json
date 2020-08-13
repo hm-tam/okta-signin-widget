@@ -140,7 +140,7 @@
         { "methodType": "totp" } 
       ],
       "contextualData": {
-        "selectedChannel": "totp"
+        "selectedMethod": "totp"
       }
     }
   },
