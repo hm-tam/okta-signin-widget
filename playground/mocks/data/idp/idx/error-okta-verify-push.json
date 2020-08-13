@@ -19,7 +19,7 @@
         "rel":[
           "create-form"
         ],
-        "name":"okta-verify-poll",
+        "name":"challenge-poll",
         "relatesTo":[
           "$.currentAuthenticator"
         ],

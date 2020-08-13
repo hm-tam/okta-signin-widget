@@ -49,7 +49,7 @@ test
     await t.expect(log[1]).eql('===== playground widget afterRender event received =====');
     await t.expect(JSON.parse(log[2])).eql({
       controller: 'mfa-verify',
-      formName: 'okta-verify-poll',
+      formName: 'challenge-poll',
       authenticatorType: 'app',
     });
 

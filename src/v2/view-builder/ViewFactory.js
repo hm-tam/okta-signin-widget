@@ -139,8 +139,8 @@ const VIEWS_MAPPING = {
     phone: ChallengeAuthenticatorPhoneView,
     app: ChallengeOktaVerifyView,
   },
-  [RemediationForms.OKTA_VERIFY_POLL]: {
-    [DEFAULT]: ChallengeOktaVerifyPushView,
+  [RemediationForms.CHALLENGE_POLL]: {
+    app: ChallengeOktaVerifyPushView,
   },
   [RemediationForms.AUTHENTICATOR_VERIFICATION_DATA]: {
     phone: ChallengeAuthenticatorDataPhoneView,

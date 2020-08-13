@@ -18,7 +18,7 @@ const FORMNAME_CLASSNAME_MAPPINGS = {
     'security_key': 'mfa-verify-webauthn',
     app: 'mfa-verify',
   },
-  [FORMS.OKTA_VERIFY_POLL]: {
+  [FORMS.CHALLENGE_POLL]: {
     app: 'mfa-verify',
   },
   [FORMS.ENROLL_AUTHENTICATOR]: {
