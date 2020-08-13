@@ -126,7 +126,10 @@
         { "methodType": "signed_nonce" },
         { "methodType": "push" },
         { "methodType": "totp" } 
-      ]
+      ],
+      "contextualData": {
+        "selectedMethod": "push"
+      }
     }
   },
   "authenticators": {
