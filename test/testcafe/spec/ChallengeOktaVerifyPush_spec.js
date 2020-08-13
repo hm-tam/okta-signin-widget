@@ -25,6 +25,11 @@ const pushRejectMock = RequestMock()
   .onRequestTo('http://localhost:3000/idp/idx/challenge/poll')
   .respond(pushReject, 403);
 
+  const pushWaitMock = RequestMock()
+    .onRequestTo('http://localhost:3000/idp/idx/introspect')
+    .respond(pushPoll)
+    .onRequestTo('http://localhost:3000/idp/idx/challenge/poll')
+    .respond(pushPoll);
 
 fixture('Challenge Okta Verify Push Form');
 
@@ -84,4 +89,13 @@ test
     });
     await t.expect(answerRequestMethod).eql('post');
     await t.expect(answerRequestUrl).eql('http://localhost:3000/idp/idx/challenge/poll');
+  });
+
+  test
+  .requestHooks(pushWaitMock)('Warning callout appears after 30 seconds', async t => {
+    const challengeOktaVerifyPushPageObject = await setup(t);
+    await t.wait(30500);
+    const warningBox = challengeOktaVerifyPushPageObject.getWarningBox();
+    await t.expect(warningBox.innerText)
+      .eql('Haven\'t received a push notification yet? Try opening the Okta Verify App on your phone.');
   });
